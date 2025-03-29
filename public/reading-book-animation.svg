@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <!-- Definitions for animations -->
+  <defs>
+    <!-- Hand shadow gradient -->
+    <linearGradient id="handShadow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#4338ca;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#4338ca;stop-opacity:0"/>
+    </linearGradient>
+    
+    <!-- Page gradient -->
+    <linearGradient id="pageGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f8fafc"/>
+      <stop offset="100%" style="stop-color:#e2e8f0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Book base -->
+  <path d="M 100,200 L 300,200 L 300,80 C 300,70 290,65 280,65 L 120,65 C 110,65 100,70 100,80 Z" 
+        fill="#4338ca"/>
+  
+  <!-- Book spine shadow -->
+  <path d="M 100,80 C 100,70 110,65 120,65 L 140,65 C 130,65 120,70 120,80 L 120,200 L 100,200 Z" 
+        fill="#312e81"/>
+  
+  <!-- Static pages (background) -->
+  <path d="M 120,80 L 280,80 L 280,190 L 120,190 Z" fill="#f8fafc"/>
+  
+  <!-- Animated page -->
+  <g id="turningPage">
+    <path d="M 120,80 L 280,80 L 280,190 L 120,190 Z" fill="url(#pageGradient)">
+      <animate attributeName="d" 
+               dur="2s"
+               repeatCount="indefinite"
+               values="
+                 M 120,80 L 280,80 L 280,190 L 120,190 Z;
+                 M 120,80 Q 220,80 280,100 L 280,190 Q 220,170 120,190 Z;
+                 M 120,80 Q 180,80 200,100 L 200,190 Q 180,170 120,190 Z;
+                 M 120,80 L 280,80 L 280,190 L 120,190 Z"
+               keyTimes="0; 0.4; 0.8; 1"/>
+      <animate attributeName="opacity"
+               dur="2s"
+               repeatCount="indefinite"
+               values="1;0.9;0.8;1"
+               keyTimes="0;0.4;0.8;1"/>
+    </path>
+  </g>
+
+  <!-- Animated hand -->
+  <g id="hand">
+    <!-- Thumb -->
+    <path d="M 260,160 Q 270,165 275,170 Q 280,175 280,180 L 275,185 Q 270,180 265,175 Z" fill="#fed7aa">
+      <animate attributeName="d"
+               dur="2s"
+               repeatCount="indefinite"
+               values="
+                 M 260,160 Q 270,165 275,170 Q 280,175 280,180 L 275,185 Q 270,180 265,175 Z;
+                 M 200,160 Q 210,165 215,170 Q 220,175 220,180 L 215,185 Q 210,180 205,175 Z;
+                 M 150,160 Q 160,165 165,170 Q 170,175 170,180 L 165,185 Q 160,180 155,175 Z;
+                 M 260,160 Q 270,165 275,170 Q 280,175 280,180 L 275,185 Q 270,180 265,175 Z"/>
+    </path>
+    
+    <!-- Index finger -->
+    <path d="M 285,150 Q 290,160 290,170 L 285,175 Q 280,165 275,160 Z" fill="#fed7aa">
+      <animate attributeName="d"
+               dur="2s"
+               repeatCount="indefinite"
+               values="
+                 M 285,150 Q 290,160 290,170 L 285,175 Q 280,165 275,160 Z;
+                 M 225,150 Q 230,160 230,170 L 225,175 Q 220,165 215,160 Z;
+                 M 175,150 Q 180,160 180,170 L 175,175 Q 170,165 165,160 Z;
+                 M 285,150 Q 290,160 290,170 L 285,175 Q 280,165 275,160 Z"/>
+    </path>
+  </g>
+
+  <!-- Text lines on visible page -->
+  <g id="textLines" stroke="#6366f1" stroke-width="1" opacity="0.3">
+    <line x1="140" y1="100" x2="260" y2="100">
+      <animate attributeName="x2"
+               dur="2s"
+               repeatCount="indefinite"
+               values="260;200;160;260"/>
+    </line>
+    <line x1="140" y1="120" x2="240" y2="120">
+      <animate attributeName="x2"
+               dur="2s"
+               repeatCount="indefinite"
+               values="240;190;150;240"/>
+    </line>
+    <line x1="140" y1="140" x2="250" y2="140">
+      <animate attributeName="x2"
+               dur="2s"
+               repeatCount="indefinite"
+               values="250;195;155;250"/>
+    </line>
+  </g>
+
+  <!-- Page corner fold effect -->
+  <path d="M 280,80 L 280,190 L 270,180 Q 275,185 280,190" 
+        fill="#e2e8f0" opacity="0.5">
+    <animate attributeName="d"
+             dur="2s"
+             repeatCount="indefinite"
+             values="
+               M 280,80 L 280,190 L 270,180 Q 275,185 280,190;
+               M 220,90 L 220,180 L 210,170 Q 215,175 220,180;
+               M 170,100 L 170,170 L 160,160 Q 165,165 170,170;
+               M 280,80 L 280,190 L 270,180 Q 275,185 280,190"/>
+  </path>
+
+  <!-- Reading progress shadow -->
+  <path d="M 120,190 L 280,190 L 280,195 L 120,195 Z" 
+        fill="url(#handShadow)" opacity="0.3"/>
+</svg>
