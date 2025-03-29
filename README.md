@@ -42,8 +42,8 @@ A modern, responsive weather dashboard application built with React that allows 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/weather-dashboard.git
-   cd weather-dashboard
+   git clone https://github.com/aakash-kumar-singh/WeatherForecast.git
+   cd assignment
    ```
 
 2. Install dependencies:
@@ -61,7 +61,7 @@ A modern, responsive weather dashboard application built with React that allows 
    npm start
    ```
 
-5. Open [http://localhost:3000](http://localhost:3000) to view the app in your browser.
+5. Open [http://localhost:5173](http://localhost:5173) to view the app in your browser.
 
 ## 🔌 API Integration
 
