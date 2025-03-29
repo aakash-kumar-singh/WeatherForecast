@@ -1,4 +1,3 @@
-// src/components/weather/ErrorMessage.jsx
 import { motion } from "framer-motion";
 import { AlertTriangle } from "lucide-react";
 import { useTheme } from "../ThemeToggle";

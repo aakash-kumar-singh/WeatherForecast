@@ -19,7 +19,6 @@ export const LoadingSpinner = ({ text = "Loading...", showOverlay = true }) => {
       } flex items-center justify-center`}
     >
       <div className="flex flex-col items-center gap-8">
-        {/* Dot Loader */}
         <div className="flex gap-3 items-center">
           {[1, 2, 3].map((_, i) => (
             <motion.div
@@ -37,8 +36,6 @@ export const LoadingSpinner = ({ text = "Loading...", showOverlay = true }) => {
             />
           ))}
         </div>
-
-        {/* Loading text */}
         {text && (
           <motion.div
             className={`px-4 py-2 ${textBgColor} rounded-full`}

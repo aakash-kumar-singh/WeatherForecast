@@ -5,7 +5,7 @@ import { useTheme } from "../ThemeToggle";
 import { getWeatherIconUrl, formatDate, formatTime } from "../../services/weatherService";
 import AnimatedNumber from "./AnimatedNumber";
 
-const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
+const WeatherCard = ({ weatherData, onRefresh, isRefreshing, useCelsius, convertTemperature }) => {
   const { isDark } = useTheme();
 
   if (!weatherData) return null;
@@ -25,7 +25,9 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
   const iconCode = weather[0].icon;
   const country = sys.country;
 
-  // Get appropriate background gradient based on weather and time of day
+  const displayTemp = Math.round(convertTemperature(temp));
+  const displayFeelsLike = Math.round(convertTemperature(feels_like));
+
   const getBackgroundGradient = () => {
     const isDay = iconCode.includes('d');
     
@@ -58,6 +60,16 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
     return isDark ? "from-zinc-900/30 to-gray-900/30" : "from-zinc-300/20 to-gray-200/20";
   };
 
+  const getWeatherAnimation = () => {
+    if (weatherCondition.toLowerCase().includes('clear')) {
+      return <SunAnimation isDark={isDark} isDay={iconCode.includes('d')} />;
+    }
+    if (weatherCondition.toLowerCase().includes('cloud')) {
+      return <CloudAnimation isDark={isDark} />;
+    }
+    return null;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -66,7 +78,6 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
       transition={{ duration: 0.5 }}
       className="relative w-full max-w-xl mx-auto group"
     >
-      {/* Outer animated gradient border */}
       <div className="absolute -inset-0.5 bg-gradient-to-r from-zinc-500 to-stone-500 rounded-lg blur opacity-30 group-hover:opacity-50 transition duration-300" />
       
       <div
@@ -76,7 +87,6 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
                      ? "border-zinc-700/50 group-hover:border-zinc-600/70"
                      : "border-zinc-300/50 group-hover:border-zinc-400/70"}`}
       >
-        {/* Header with location and refresh button */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center space-x-2">
             <MapPin className={`h-5 w-5 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
@@ -102,7 +112,6 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
           </button>
         </div>
         
-        {/* Date and time */}
         <div className="flex items-center space-x-4 mb-6">
           <div className="flex items-center">
             <Calendar className={`h-4 w-4 mr-1 ${isDark ? "text-indigo-400" : "text-indigo-600"}`} />
@@ -118,9 +127,7 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
           </div>
         </div>
         
-        {/* Main weather info */}
         <div className="flex flex-col sm:flex-row items-center gap-6">
-          {/* Left column with temp and icon */}
           <div className="flex flex-col items-center">
             <div className="relative">
               <img
@@ -128,27 +135,18 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
                 alt={weatherDescription}
                 className="w-24 h-24 object-contain"
               />
-              <motion.div
-                className="absolute inset-0 rounded-full opacity-20"
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.2, 0.3, 0.2],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              />
+              {getWeatherAnimation()}
             </div>
             
             <div className="text-center mt-1">
               <div className="flex items-center justify-center">
                 <AnimatedNumber
-                  value={Math.round(temp)}
+                  value={displayTemp}
                   className={`text-4xl font-bold ${isDark ? "text-white" : "text-gray-800"}`}
                 />
-                <span className={`text-2xl ml-1 ${isDark ? "text-white" : "text-gray-800"}`}>°C</span>
+                <span className={`text-2xl ml-1 ${isDark ? "text-white" : "text-gray-800"}`}>
+                  °{useCelsius ? 'C' : 'F'}
+                </span>
               </div>
               <p className={`capitalize text-lg mt-1 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                 {weatherDescription}
@@ -156,12 +154,9 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
             </div>
           </div>
           
-          {/* Divider for mobile view */}
           <div className="w-full sm:hidden h-px bg-gradient-to-r from-transparent via-gray-400/30 to-transparent my-2" />
           
-          {/* Right column with details */}
           <div className="space-y-4 w-full sm:w-auto">
-            {/* Feels like */}
             <div className="flex items-center gap-3">
               <div
                 className={`p-2 rounded-lg ${
@@ -180,12 +175,11 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
                   Feels like
                 </p>
                 <p className={`font-medium ${isDark ? "text-white" : "text-gray-800"}`}>
-                  {Math.round(feels_like)}°C
+                  {displayFeelsLike}°{useCelsius ? 'C' : 'F'}
                 </p>
               </div>
             </div>
             
-            {/* Humidity */}
             <div className="flex items-center gap-3">
               <div
                 className={`p-2 rounded-lg ${
@@ -209,7 +203,6 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
               </div>
             </div>
             
-            {/* Wind speed */}
             <div className="flex items-center gap-3">
               <div
                 className={`p-2 rounded-lg ${
@@ -239,7 +232,44 @@ const WeatherCard = ({ weatherData, onRefresh, isRefreshing }) => {
   );
 };
 
-// Sun component for feels like
+const SunAnimation = ({ isDark, isDay }) => {
+  const color = isDay 
+    ? (isDark ? "text-amber-400" : "text-amber-500") 
+    : (isDark ? "text-indigo-300" : "text-indigo-400");
+  
+  return (
+    <motion.div 
+      className={`absolute inset-0 ${color} opacity-20 rounded-full`}
+      animate={{
+        scale: [1, 1.2, 1],
+        opacity: [0.2, 0.4, 0.2],
+      }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  );
+};
+
+const CloudAnimation = ({ isDark }) => {
+  return (
+    <motion.div 
+      className={`absolute inset-0 rounded-full ${isDark ? "bg-gray-500" : "bg-gray-300"} opacity-10`}
+      animate={{
+        scale: [1, 1.1, 1],
+        x: [0, 5, 0],
+      }}
+      transition={{
+        duration: 8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  );
+};
+
 const Sun = ({ className }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 

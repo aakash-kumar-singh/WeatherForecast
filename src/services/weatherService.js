@@ -1,9 +1,6 @@
-// src/services/weatherService.js
-// Replace this with your actual OpenWeatherMap API key
 const API_KEY = "bd5e378503939ddaee76f12ad7a97608";
 const BASE_URL = "https://api.openweathermap.org/data/2.5";
 
-// Fetch current weather data for a city
 export const fetchWeatherData = async (city) => {
   try {
     const response = await fetch(
@@ -22,7 +19,6 @@ export const fetchWeatherData = async (city) => {
   }
 };
 
-// Fetch 5-day forecast data for a city
 export const fetchForecastData = async (city) => {
   try {
     const response = await fetch(
@@ -41,12 +37,10 @@ export const fetchForecastData = async (city) => {
   }
 };
 
-// Helper function to get weather icon URL
 export const getWeatherIconUrl = (iconCode) => {
   return `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 };
 
-// Helper function to format date from UNIX timestamp
 export const formatDate = (timestamp) => {
   const date = new Date(timestamp * 1000);
   return date.toLocaleDateString("en-US", {
@@ -56,7 +50,6 @@ export const formatDate = (timestamp) => {
   });
 };
 
-// Helper function to format time from UNIX timestamp
 export const formatTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
   return date.toLocaleTimeString("en-US", {
@@ -65,7 +58,6 @@ export const formatTime = (timestamp) => {
   });
 };
 
-// Helper function to group forecast data by day
 export const groupForecastByDay = (forecastData) => {
   if (!forecastData || !forecastData.list) return [];
 
@@ -91,12 +83,10 @@ export const groupForecastByDay = (forecastData) => {
     dailyData[date].descriptions.push(item.weather[0].description);
   });
 
-  // Calculate avg temp and get most frequent icon and description
   return Object.values(dailyData).map((day) => {
     const avgTemp =
       day.temps.reduce((sum, temp) => sum + temp, 0) / day.temps.length;
 
-    // Find the most frequent icon
     const iconCounts = {};
     day.icons.forEach((icon) => {
       iconCounts[icon] = (iconCounts[icon] || 0) + 1;
@@ -105,7 +95,6 @@ export const groupForecastByDay = (forecastData) => {
       (a, b) => b[1] - a[1]
     )[0][0];
 
-    // Find the most frequent description
     const descCounts = {};
     day.descriptions.forEach((desc) => {
       descCounts[desc] = (descCounts[desc] || 0) + 1;
